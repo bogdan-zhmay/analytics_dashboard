@@ -1,25 +1,28 @@
 import React, {useState, useEffect} from "react"
-import {Server} from "miragejs"
-
-let server = new Server()
-server.get("/api/users", {users: [{id: 1, name: "Bob"}]})
 
 export default function App() {
-  let [users, setUsers] = useState([])
+  let [events, setUsers] = useState([])
 
   useEffect(() => {
-    fetch("/api/users")
+    fetch("/api/event")
       .then((res) => res.json())
       .then((json) => {
-        setUsers(json.users)
+        setUsers(json.events)
+        // console.log(json.users[0].id)
       })
   }, [])
 
   return (
     <ul>
       {
-        users.map((user) => (
-          <li key = {user.id} > {user.name} </li>
+        events.map((user) => (
+          <li key={ user.id }>
+            <div>ID: { user.id }</div>
+            <div>Country: { user.geoData }</div>
+            <div>Device: { user.device }</div>
+            <div>OS Version: { user.version }</div>
+            <div>Purchase: { user.purchase }$</div>
+          </li>
         ))
       }
     </ul>
