@@ -4,12 +4,16 @@ export default function App() {
   let [events, setUsers] = useState([])
 
   useEffect(() => {
-    fetch("/api/event")
-      .then((res) => res.json())
-      .then((json) => {
-        setUsers(json.events)
-        // console.log(json.users[0].id)
-      })
+    // fetch("/api/event")
+    //   .then((res) => res.json())
+    //   .then((json) => {
+    //     setUsers(json.events)
+    //   })
+    fetch("/api/events")
+        .then((res) => res.json())
+        .then((json) => {
+          setUsers(json.events)
+        })
   }, [])
 
   return (
