@@ -1,22 +1,27 @@
-import { Server, Model, Factory } from "miragejs";
+import { Server, Model } from "miragejs";
 import faker from 'faker';
 
 export function makeServer({ environment = "development" } = {}) {
 
-  let getUser = () => {
+  let getUser = (count) => {
 
+    let arr = [];
 
-    let userData = {
-      id: faker.random.number(),
-      geoData: faker.address.country(),
-      device: faker.internet.userAgent(),
-      version: faker.system.semver(),
-      purchase: faker.random.number()
+    for (let i = 0; i < count; i++) {
+      let userData = {
+        id: faker.random.number(),
+        geoData: faker.address.country(),
+        device: faker.internet.userAgent(),
+        version: faker.system.semver(),
+        purchase: faker.random.number()
+      }
+      arr.push(userData)
     }
 
-    return userData
+    return arr
   }
-  console.log(getUser())
+
+  console.log(getUser(10))
 
   let server = new Server({
     environment,
@@ -25,46 +30,20 @@ export function makeServer({ environment = "development" } = {}) {
       event: Model,
     },
 
-    factories: {
-      event: Factory.extend({
-        id() {
-          return faker.random.number()
-        },
-
-        geoData() {
-          return faker.address.country()
-        },
-
-        device() {
-          return faker.internet.userAgent()
-        },
-
-        version() {
-          return faker.system.semver()
-        },
-
-        purchase() {
-          return faker.random.number()
-        }
-      }),
-    },
-
     seeds(server) {
-      server.create("event", getUser())
-      server.createList("event", 3)
+      server.create("event", getUser(1))
     },
 
     routes() {
       this.namespace = "api"
 
-      this.get("/event", (schema) => {
+      this.get("/event/:id", (schema) => {
         return schema.events.all()
       })
 
-      this.get("/events", (schema) => {
-
-        return schema.events.all()
-      })
+      // this.get("/events", (schema) => {
+      //   return schema.events.all()
+      // })
     },
   })
 
